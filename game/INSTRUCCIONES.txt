@@ -1,0 +1,20 @@
+PRETTY DEAD GIRL — PORTAL WEB LISTO PARA GITHUB
+
+1. Extrae este ZIP.
+2. Abre la carpeta de tu repositorio local: PrettyDeadGirl_Portal_GitHub.
+3. COPIA en la raíz del repositorio:
+   - index.html
+   - style.css
+   - script.js
+   - README.md (reemplazar el anterior)
+   - carpeta assets
+4. NO BORRES NI REEMPLACES la carpeta game que ya funciona en GitHub Pages.
+5. En Visual Studio Code: Source Control > Stage (+) > Commit > Sync Changes/Push.
+6. Abre https://denistae.github.io/PrettyDeadGirl_Portal_GitHub/
+7. Actualiza con Ctrl + F5 si el navegador conserva la página anterior.
+
+IMPORTANTE:
+- El ZIP no incluye el juego Unity WebGL: usa la carpeta game/ que ya subiste.
+- El portal integra el juego al presionar INICIAR JUEGO y ofrece pantalla completa.
+- Las imágenes usadas son capturas reales de tu juego que compartiste en el chat.
+- No se incluye música comercial; para publicar el WebGL, revisa permisos musicales.

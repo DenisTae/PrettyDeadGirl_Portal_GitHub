@@ -1,0 +1,24 @@
+'use strict';
+const mobileToggle=document.getElementById('mobileToggle');
+const mainNav=document.getElementById('mainNav');
+mobileToggle.addEventListener('click',()=>{const isOpen=mainNav.classList.toggle('open');mobileToggle.setAttribute('aria-expanded',String(isOpen));mobileToggle.setAttribute('aria-label',isOpen?'Cerrar menú':'Abrir menú')});
+mainNav.querySelectorAll('a').forEach(link=>link.addEventListener('click',()=>{mainNav.classList.remove('open');mobileToggle.setAttribute('aria-expanded','false')}));
+const reveals=document.querySelectorAll('.reveal');
+if('IntersectionObserver' in window){const observer=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('visible');observer.unobserve(entry.target)}})},{threshold:.09});reveals.forEach(el=>observer.observe(el))}else{reveals.forEach(el=>el.classList.add('visible'))}
+const progress=document.getElementById('readingProgress');
+let ticking=false;
+window.addEventListener('scroll',()=>{if(ticking)return;ticking=true;requestAnimationFrame(()=>{const max=document.documentElement.scrollHeight-window.innerHeight;progress.style.width=(max>0?window.scrollY/max*100:0)+'%';ticking=false})},{passive:true});
+const frame=document.getElementById('gameFrame');
+const placeholder=document.getElementById('gamePlaceholder');
+const loadGame=document.getElementById('loadGame');
+const gameState=document.getElementById('gameState');
+const gameArea=document.getElementById('gameArea');
+let started=false;
+loadGame.addEventListener('click',()=>{if(started)return;started=true;loadGame.disabled=true;gameState.textContent='CARGANDO UNITY WEBGL...';frame.hidden=false;frame.src='game/';placeholder.hidden=true;frame.addEventListener('load',()=>{gameState.textContent='JUEGO ABIERTO · HAZ CLIC EN EL JUEGO PARA CONTROLARLO';},{once:true})});
+document.getElementById('fullscreenBtn').addEventListener('click',()=>{if(document.fullscreenElement){document.exitFullscreen?.();return}if(started){if(gameArea.requestFullscreen)gameArea.requestFullscreen();else window.open('game/','_blank','noopener')}else{window.open('game/','_blank','noopener')}});
+const lightbox=document.getElementById('lightbox');
+const lightboxImage=document.getElementById('lightboxImage');
+const lightboxCaption=document.getElementById('lightboxCaption');
+document.querySelectorAll('[data-image]').forEach(btn=>btn.addEventListener('click',()=>{lightboxImage.src=btn.dataset.image;lightboxImage.alt=btn.dataset.caption;lightboxCaption.textContent=btn.dataset.caption;if(typeof lightbox.showModal==='function')lightbox.showModal()}));
+document.getElementById('lightboxClose').addEventListener('click',()=>lightbox.close());
+lightbox.addEventListener('click',e=>{if(e.target===lightbox)lightbox.close()});

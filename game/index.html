@@ -1,150 +1,59 @@
-<!DOCTYPE html>
-<html lang="en-us">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Unity Web Player | PrettyDeadGirl</title>
-    <link rel="shortcut icon" href="TemplateData/favicon.ico">
-    <link rel="stylesheet" href="TemplateData/style.css">
-  </head>
-  <body>
-    <div id="unity-container" class="unity-desktop">
-      <div id="unity-fullscreen-container">
-        <canvas id="unity-canvas" width="960" height="600" tabindex="-1"></canvas>
-        <div id="unity-loading-container">
-          <div id="unity-loading-bar">
-            <div id="unity-logo"></div>
-            <div id="unity-progress-bar-empty">
-              <div id="unity-progress-bar-full"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div id="unity-warning"> </div>
-      <div id="unity-footer">
-        <div id="unity-logo-title-footer"></div>
-        <div id="unity-fullscreen-button"></div>
-        <div id="unity-build-title">PrettyDeadGirl</div>
-      </div>
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#100719">
+  <meta name="description" content="Pretty Dead Girl: Olivia's Nightmare. Videojuego 3D de exploración y supervivencia creado en Unity 6 por Denis Medrano Carrasco y Ariana Patzi Gonzales. Juega gratis desde el navegador.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Pretty Dead Girl | Olivia's Nightmare">
+  <meta property="og:description" content="Entra en la pesadilla de Olivia. Explora tres laberintos, evita enemigos y recoge corazones.">
+  <meta property="og:image" content="https://denistae.github.io/PrettyDeadGirl_Portal_GitHub/assets/menu.webp">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <title>Pretty Dead Girl — Olivia's Nightmare</title>
+</head>
+<body>
+  <div class="noise" aria-hidden="true"></div>
+  <div class="reading-progress" id="readingProgress"></div>
+  <header class="header" id="top">
+    <div class="container header-inner">
+      <a class="brand" href="#inicio" aria-label="Pretty Dead Girl, ir al inicio"><span class="brand-icon">♥</span><span>PRETTY<span class="brand-pink">DEAD</span>GIRL<small>OLIVIA'S NIGHTMARE</small></span></a>
+      <button class="mobile-toggle" id="mobileToggle" type="button" aria-label="Abrir menú" aria-controls="mainNav" aria-expanded="false"><span></span><span></span><span></span></button>
+      <nav class="nav" id="mainNav" aria-label="Navegación principal"><a href="#historia">Historia</a><a href="#niveles">Niveles</a><a href="#galeria">Galería</a><a href="#controles">Controles</a><a href="#equipo">Equipo</a><a class="nav-play" href="#jugar">Jugar ahora <span>↗</span></a></nav>
     </div>
-    <script>
-      let canvas = document.querySelector("#unity-canvas");
-      let fullscreenContainer = document.querySelector("#unity-fullscreen-container");
-
-      // Shows a temporary message banner/ribbon for a few seconds, or
-      // a permanent error message on top of the canvas if type=='error'.
-      // If type=='warning', a yellow highlight color is used.
-      // Modify or remove this function to customize the visually presented
-      // way that non-critical warnings and error messages are presented to the
-      // user.
-      function unityShowBanner(msg, type) {
-        var warningBanner = document.querySelector("#unity-warning");
-        function updateBannerVisibility() {
-          warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
-        }
-        var div = document.createElement('div');
-        div.innerHTML = msg;
-        warningBanner.appendChild(div);
-        if (type == 'error') div.style = 'background: red; padding: 10px;';
-        else {
-          if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
-          setTimeout(function() {
-            warningBanner.removeChild(div);
-            updateBannerVisibility();
-          }, 5000);
-        }
-        updateBannerVisibility();
-      }
-
-      var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/PrettyDeadGirl_WebGL.loader.js";
-      var config = {
-        arguments: [],
-        dataUrl: buildUrl + "/PrettyDeadGirl_WebGL.data",
-        frameworkUrl: buildUrl + "/PrettyDeadGirl_WebGL.framework.js",
-        codeUrl: buildUrl + "/PrettyDeadGirl_WebGL.wasm",
-        streamingAssetsUrl: "StreamingAssets",
-
-        // If you have a custom web site structure, or want to place multiple Unity build instances on the same page,
-        // you can pass fullscreenElementID: "my-unity-fullscreen-container-id", in this configuration field to
-        // explicitly point to the element tree root that is displayed in fullscreen mode.
-        fullscreenElementID: "unity-fullscreen-container",
-
-        companyName: "DefaultCompany",
-        productName: "PrettyDeadGirl",
-        productVersion: "0.1.0",
-        showBanner: unityShowBanner,
-        // errorHandler: function(err, url, line) {
-        //    alert("error " + err + " occurred at line " + line);
-        //    // Return 'true' if you handled this error and don't want Unity
-        //    // to process it further, 'false' otherwise.
-        //    return true;
-        // },
-      };
-
-      // By default, Unity keeps WebGL canvas render target size matched with
-      // the DOM size of the canvas element (scaled by window.devicePixelRatio)
-      // Set this to false if you want to decouple this synchronization from
-      // happening inside the engine, and you would instead like to size up
-      // the canvas DOM size and WebGL render target sizes yourself.
-      // config.matchWebGLToCanvasSize = false;
-
-      // If you would like all file writes inside Unity Application.persistentDataPath
-      // directory to automatically persist so that the contents are remembered when
-      // the user revisits the site the next time, uncomment the following line:
-      // config.autoSyncPersistentDataPath = true;
-      // This autosyncing is currently not the default behavior to avoid regressing
-      // existing user projects that might rely on the earlier manual
-      // JS_FileSystem_Sync() behavior, but in future Unity version, this will be
-      // expected to change.
-
-      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-        // Mobile device style: fill the whole browser client area with the game canvas:
-
-        var meta = document.createElement('meta');
-        meta.name = 'viewport';
-        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
-        document.getElementsByTagName('head')[0].appendChild(meta);
-        document.querySelector("#unity-container").className = "unity-mobile";
-        canvas.className = "unity-mobile";
-
-        // To lower canvas resolution on mobile devices to gain some
-        // performance, uncomment the following line:
-        // config.devicePixelRatio = 1;
-
-
-      } else {
-        // Desktop style: Render the game canvas container in a window that can be maximized to fullscreen:
-        fullscreenContainer.style.width = "960px";
-        fullscreenContainer.style.height = "600px";
-      }
-
-
-      var script = document.createElement("script");
-      script.src = loaderUrl;
-      script.onload = () => {
-        const loadingContainer = document.querySelector("#unity-loading-container");
-        const progressBarFull = document.querySelector("#unity-progress-bar-full");
-
-        createUnityInstance(canvas, config, (progress) => {
-          if (progress < 1) {
-            loadingContainer.style.display = "block";
-            progressBarFull.style.width = 100 * progress + "%";
-          } else {
-            loadingContainer.style.display = "none";
-          }
-        }).then((unityInstance) => {
-                document.querySelector("#unity-fullscreen-button").onclick = () => {
-                  unityInstance.SetFullscreen(1);
-                };
-
-              }).catch((message) => {
-                alert(message);
-              });
-            };
-
-      document.body.appendChild(script);
-
-    </script>
-  </body>
+  </header>
+  <main>
+    <section id="inicio" class="hero section">
+      <div class="hero-glow" aria-hidden="true"></div><div class="float-heart heart-one" aria-hidden="true">♥</div><div class="float-heart heart-two" aria-hidden="true">♥</div><div class="float-heart heart-three" aria-hidden="true">♥</div>
+      <div class="container hero-grid">
+        <div class="hero-copy reveal">
+          <div class="eyebrow"><span class="status-dot"></span> UN VIDEOJUEGO 3D HECHO EN UNITY 6</div>
+          <p class="pretitle">WELCOME TO OLIVIA'S NIGHTMARE</p>
+          <h1>PRETTY<br><em>DEAD</em> GIRL<span class="period">.</span></h1>
+          <p class="hero-lead">Un mundo bonito puede esconder la peor de las pesadillas.</p>
+          <p class="hero-desc">Acompaña a Olivia a través de laberintos encantados, objetos misteriosos y enemigos que no piensan dejarla escapar.</p>
+          <div class="hero-actions"><a class="btn btn-primary" href="#jugar">♥ &nbsp; JUGAR GRATIS <span>↗</span></a><a class="btn btn-outline" href="#historia">DESCUBRIR HISTORIA <span>↓</span></a></div>
+          <div class="hero-meta"><div><strong>03</strong><span>NIVELES</span></div><span class="meta-sep"></span><div><strong>3D</strong><span>EXPLORACIÓN</span></div><span class="meta-sep"></span><div><strong>WEB</strong><span>SIN INSTALAR</span></div></div>
+        </div>
+        <div class="hero-art reveal"><div class="art-orbit"></div><div class="hero-picture"><img src="assets/menu.webp" alt="Captura real del menú de Pretty Dead Girl con Olivia y corazones rosados" fetchpriority="high"><div class="picture-shine"></div></div><div class="hero-art-label"><span>✦</span> DIRECTAMENTE DESDE TU NAVEGADOR</div><div class="art-stamp">OLIVIA'S<br><b>NIGHTMARE</b><small>EST. 2026</small></div></div>
+      </div>
+      <div class="hero-scroll" aria-hidden="true">SCROLL TO EXPLORE <span>↓</span></div>
+    </section>
+    <div class="ticker" aria-label="Pretty Dead Girl, explora, sobrevive, escapa"><div class="ticker-track"><span>PRETTY DEAD GIRL</span><b>✦</b><span>EXPLORE</span><b>♥</b><span>SURVIVE</span><b>✦</b><span>ESCAPE</span><b>♥</b><span>OLIVIA'S NIGHTMARE</span><b>✦</b><span>PRETTY DEAD GIRL</span><b>✦</b><span>EXPLORE</span><b>♥</b><span>SURVIVE</span><b>✦</b><span>ESCAPE</span><b>♥</b></div></div>
+    <section id="historia" class="section story"><div class="container story-grid"><div class="story-visual reveal"><div class="story-photo"><img src="assets/nivel1.webp" alt="Captura del nivel 1 mostrando el laberinto y a Olivia en Pretty Dead Girl" loading="lazy"></div><div class="story-tag"><span>01</span> / THE NIGHTMARE</div><span class="corner-heart" aria-hidden="true">♥</span></div><div class="story-copy reveal"><p class="section-kicker">01 / LA HISTORIA</p><h2>NO TODOS LOS<br><em>CUENTOS</em> TIENEN<br>UN FINAL FELIZ.</h2><p>En <strong>Pretty Dead Girl: Olivia's Nightmare</strong>, Olivia se aventura en escenarios oscuros y coloridos donde cada recorrido es una prueba.</p><p>Debes explorar el laberinto, encontrar los objetos necesarios y mantenerte lejos de los enemigos para avanzar. Cada nivel trae un nuevo entorno, pero la pregunta es la misma: <strong>¿lograrás salir?</strong></p><div class="mini-features"><span>✦ EXPLORACIÓN</span><span>♥ COLECCIONABLES</span><span>⚡ SUPERVIVENCIA</span></div></div></div></section>
+    <section id="niveles" class="section levels"><div class="container"><div class="section-heading reveal"><div><p class="section-kicker">02 / EL RECORRIDO</p><h2>TRES NIVELES.<br><em>UNA PESADILLA.</em></h2></div><p>Tres desafíos dentro de un universo de tonos oscuros, corazones brillantes y peligros inesperados.</p></div><div class="level-grid"><article class="level-card reveal"><div class="level-art level-art-one"><span class="level-number">01</span><span class="level-symbol">♥</span></div><div class="level-info"><span class="level-label">CAPÍTULO I</span><h3>DROP DEAD</h3><p>El inicio de la pesadilla. Conoce las reglas del laberinto, recoge objetos y esquiva las amenazas.</p><a href="#jugar">JUGAR NIVEL <span>↗</span></a></div></article><article class="level-card reveal"><div class="level-art level-art-two"><span class="level-number">02</span><span class="level-symbol">✦</span></div><div class="level-info"><span class="level-label">CAPÍTULO II</span><h3>PURPLE</h3><p>Continúa el recorrido y descubre qué desafíos te esperan mientras exploras el siguiente escenario.</p><a href="#jugar">JUGAR NIVEL <span>↗</span></a></div></article><article class="level-card reveal"><div class="level-art level-art-three"><span class="level-number">03</span><span class="level-symbol">☾</span></div><div class="level-info"><span class="level-label">CAPÍTULO III</span><h3>STUPID SONG</h3><p>El último capítulo de la aventura de Olivia. Pon a prueba tus reflejos y completa el recorrido.</p><a href="#jugar">JUGAR NIVEL <span>↗</span></a></div></article></div></div></section>
+    <section id="galeria" class="section gallery"><div class="container"><div class="section-heading reveal"><div><p class="section-kicker">03 / DENTRO DEL JUEGO</p><h2>UN VISTAZO A<br><em>LA PESADILLA.</em></h2></div><p>Imágenes reales capturadas del videojuego desarrollado en Unity.</p></div><div class="gallery-grid"><button type="button" class="gallery-item gallery-first reveal" data-image="assets/menu.webp" data-caption="Menú principal — Pretty Dead Girl" aria-label="Ampliar captura del menú"><img src="assets/menu.webp" alt="Menú principal de Pretty Dead Girl" loading="lazy"><span class="gallery-label">01 / MENÚ PRINCIPAL <b>↗</b></span></button><button type="button" class="gallery-item reveal" data-image="assets/nivel1.webp" data-caption="Nivel 1 — Drop Dead" aria-label="Ampliar captura del laberinto"><img src="assets/nivel1.webp" alt="Escenario del primer nivel de Pretty Dead Girl" loading="lazy"><span class="gallery-label">02 / LABERINTO <b>↗</b></span></button></div></div></section>
+    <section id="controles" class="section controls"><div class="container controls-grid"><div class="reveal"><p class="section-kicker">04 / GUÍA DE JUEGO</p><h2>APRENDE A<br><em>SOBREVIVIR.</em></h2><p class="controls-intro">Muévete, corre, encuentra los objetos y cambia tu perspectiva para descubrir lo que hay más allá.</p><div class="tip"><span>✦</span><p><strong>CONSEJO:</strong> Si no puedes ver un pasillo o un objeto, presiona <kbd>C</kbd> para cambiar la cámara.</p></div></div><div class="control-list reveal"><div><span class="key-set"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></span><span>Mover a Olivia</span></div><div><span class="key-set"><kbd>↑</kbd><kbd>←</kbd><kbd>↓</kbd><kbd>→</kbd></span><span>Movimiento alternativo</span></div><div><span class="key-set"><kbd>SHIFT</kbd></span><span>Correr</span></div><div><span class="key-set"><kbd>C</kbd></span><span>Cambiar cámara</span></div><div><span class="key-set"><kbd>V</kbd></span><span>Rayos / habilidad</span></div><div><span class="key-set"><kbd>R</kbd></span><span>Reiniciar nivel</span></div><div><span class="key-set"><kbd>ESC</kbd></span><span>Pausar</span></div></div></div></section>
+    <section id="jugar" class="section play-section"><div class="container"><div class="play-heading reveal"><p class="section-kicker">05 / TU TURNO</p><h2>LA PESADILLA<br><em>COMIENZA AQUÍ.</em></h2><p>Juega la versión WebGL de Pretty Dead Girl directamente en tu navegador. Sin descargas ni instalaciones.</p></div><div class="game-shell reveal"><div class="game-titlebar"><div class="window-lights"><i></i><i></i><i></i></div><span>PRETTY DEAD GIRL <span class="dim">/ OLIVIA'S NIGHTMARE</span></span><div class="live-indicator"><span></span> WEBGL</div></div><div class="game-area" id="gameArea"><div class="game-placeholder" id="gamePlaceholder"><img src="assets/menu.webp" alt="Vista previa del videojuego Pretty Dead Girl" loading="lazy"><div class="game-overlay"><span class="game-overlay-heart">♥</span><h3>¿LISTO PARA JUGAR?</h3><p>Usa un teclado para disfrutar de los controles del juego.</p><button class="btn btn-primary" type="button" id="loadGame">▶ &nbsp; INICIAR JUEGO</button></div></div><iframe id="gameFrame" title="Jugar Pretty Dead Girl — Unity WebGL" allow="fullscreen; autoplay" allowfullscreen loading="lazy" hidden></iframe></div><div class="game-footer"><div><span class="pulse-dot"></span><span id="gameState">LISTO PARA JUGAR</span></div><div class="game-buttons"><button id="fullscreenBtn" type="button">⛶ &nbsp; PANTALLA COMPLETA</button><a href="game/" target="_blank" rel="noopener">ABRIR EN OTRA PESTAÑA ↗</a></div></div></div><p class="play-hint">Recomendado para PC con Chrome, Edge o Firefox. Haz clic sobre el juego para usar el teclado. En celulares, algunos controles pueden no estar disponibles.</p></div></section>
+    <section id="equipo" class="section team"><div class="container"><div class="section-heading reveal"><div><p class="section-kicker">06 / QUIÉNES LO HICIERON</p><h2>HECHO CON<br><em>PASIÓN.</em></h2></div><p>Un proyecto desarrollado en equipo, desde la idea inicial hasta su publicación web.</p></div><div class="team-grid"><article class="member reveal"><div class="member-mark">DM</div><div><span>DESARROLLADOR</span><h3>Denis Medrano<br>Carrasco</h3><a href="https://github.com/DenisTae" target="_blank" rel="noopener">GITHUB ↗</a></div></article><article class="member reveal"><div class="member-mark">AP</div><div><span>DESARROLLADORA</span><h3>Ariana Patzi<br>Gonzales</h3><p>COCREADORA DEL PROYECTO</p></div></article></div><div class="tech-bar"><span>DESARROLLADO CON</span><strong>UNITY 6</strong><b>✦</b><strong>C#</strong><b>✦</b><strong>WEBGL</strong><b>✦</b><strong>GITHUB PAGES</strong></div></div></section>
+    <section class="closing"><div class="container closing-inner reveal"><p>READY TO ENTER?</p><h2>IT'S A BEAUTIFUL<br><em>NIGHTMARE.</em></h2><a href="#jugar" class="btn btn-primary">♥ &nbsp; EMPEZAR A JUGAR ↗</a></div><span class="closing-heart" aria-hidden="true">♥</span></section>
+  </main>
+  <footer class="footer"><div class="container footer-grid"><a href="#inicio" class="brand footer-brand"><span class="brand-icon">♥</span><span>PRETTY<span class="brand-pink">DEAD</span>GIRL<small>OLIVIA'S NIGHTMARE</small></span></a><p>Un videojuego creado por Denis Medrano Carrasco y Ariana Patzi Gonzales.</p><div class="footer-links"><a href="https://github.com/DenisTae/PrettyDeadGirl_Portal_GitHub" target="_blank" rel="noopener">REPOSITORIO ↗</a><a href="game/" target="_blank" rel="noopener">JUEGO WEBGL ↗</a><a href="#top">VOLVER ARRIBA ↑</a></div></div><div class="container footer-bottom"><span>© 2026 PRETTY DEAD GIRL · PROYECTO ACADÉMICO</span><span>MADE WITH ♥</span></div></footer>
+  <dialog class="lightbox" id="lightbox" aria-label="Vista ampliada de la captura"><button class="lightbox-close" id="lightboxClose" aria-label="Cerrar imagen">✕</button><img id="lightboxImage" src="assets/menu.webp" alt="Captura ampliada del videojuego"><p id="lightboxCaption"></p></dialog>
+  <script src="script.js" defer></script>
+</body>
 </html>
