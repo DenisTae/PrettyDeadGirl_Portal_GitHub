@@ -83,8 +83,6 @@ PrettyDeadGirl_Portal_GitHub/
 4. En **Settings → Pages**, configura **Deploy from a branch**, rama `main`, carpeta `/ (root)`.
 5. Visita `https://denistae.github.io/PrettyDeadGirl_Portal_GitHub/`.
 
-> **Nota sobre la música:** este repositorio es público. Antes de distribuir música comercial incorporada al WebGL, asegúrate de contar con los derechos o permisos correspondientes; de lo contrario usa audio original o con licencia compatible.
-
 ## 📄 Aviso
 
 Proyecto académico desarrollado por **Denis Medrano Carrasco y Ariana Patzi Gonzales**. Las capturas incluidas son del videojuego aportadas por sus desarrolladores. No se incluye música comercial en este paquete del portal.
