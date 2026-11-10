@@ -47,7 +47,7 @@ El juego está pensado principalmente para PC con teclado. Recomendado: Chrome, 
 ## 👩‍💻 Desarrolladores
 
 - **Denis Medrano Carrasco** — [GitHub @DenisTae](https://github.com/DenisTae)
-- **Ariana Patzi Gonzales** — codesarrolladora del proyecto
+- **Ariana Patzi Gonzales** — [GitHub @aritozs673-maker](https://github.com/aritozs673-maker)
 
 ## 🛠️ Tecnologías
 
